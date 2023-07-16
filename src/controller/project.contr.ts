@@ -4,7 +4,7 @@ import Project from "../schemas/projects.schema.js";
 export default {
     async addProject(req: Request, res: Response) { 
         try { 
-            console.log(req.body); 
+            console.log(req.body);   
 
             
         } catch (error) {
