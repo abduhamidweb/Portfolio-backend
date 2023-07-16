@@ -4,3 +4,8 @@ import mongoose, { Document, Types } from 'mongoose';
 export interface ITest extends Document {
     test: string;
 }
+export interface IUser extends Document {
+    name: string;
+    email: string;
+    password: string;
+}
