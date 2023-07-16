@@ -17,6 +17,7 @@ const User: Schema = new Schema({
     },
     phone: {
         type: String,
+        unique: true,
         validator: {
             validator: (value: string) => {
                 return validator.isMobilePhone(value)
@@ -28,14 +29,7 @@ const User: Schema = new Schema({
         type: String,
         required: true,
         minlength: 3,
-        maxlength: 15,
-        match: /^[a-zA-Z]+$/,
-        validate: {
-            validator: (value: string) => {
-                return validator.isAlpha(value);
-            },
-            message: 'Name must only contain alpha characters'
-        }
+        maxlength: 30,
     },
     email: {
         type: String,

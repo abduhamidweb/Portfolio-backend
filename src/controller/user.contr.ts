@@ -22,7 +22,7 @@ class UserController {
     // Yeni foydalanuvchi qo'shish 
     async createUser(req: Request, res: Response) {
         try {
-            const { name,username, phone, email, password, confirmationCode } = req.body;
+            const { name, username, phone, email, password, confirmationCode } = req.body;
             // Birinchi marta post qilganda foydalanuvchi ma'lumotlarini yuborish
             if (!confirmationCode) {
                 const generatedConfirmationCode = await sendConfirmationEmail(email);
@@ -51,18 +51,19 @@ class UserController {
             });
         } catch (error) {
             console.log('error :', error);
-            res.status(500).json({ error: 'Foydalanuvchi qo\'shishda xatolik yuz berdi' });
+            res.status(500).json({ error: 'Foydalanuvchi qo\'shishda xatolik yuz berdi', message: error });
         }
     }
     // Foydalanuvchilarni olish
     async getUsers(req: Request, res: Response) {
         try {
-            let token: any = req.headers.token;
-            const userId = JWT.VERIFY(token).id;
+            // let token: any = req.headers.token;
+            // const userId = JWT.VERIFY(token).id;
             // const user: IUser | null = await User.findById(userId);
             const users: IUser[] | null = await User.find();
             res.json(users);
         } catch (error) {
+            console.log('error :', error);
             res.status(500).json({ error: 'Foydalanuvchilarni olishda xatolik yuz berdi' });
         }
     }
@@ -92,12 +93,7 @@ class UserController {
             const { name, email, username, phone, password } = req.body;
             let token: any = req.headers.token;
             const decodedToken = JWT.VERIFY(token).id;
-            if (!(decodedToken == req.params.id)) {
-                return res.status(401).json({
-                    error: 'Siz faqat o\'zingizning ma\'lumotlaringizni o\'zgartira olasiz'
-                });
-            }
-            const user: IUser | null = await User.findByIdAndUpdate(req.params.id, { name, password, email, username, phone, }, { new: true });
+            const user: IUser | null = await User.findByIdAndUpdate(decodedToken, { name, password, email, username, phone, }, { new: true });
             if (user) {
                 res.json(user);
             } else {
@@ -112,12 +108,7 @@ class UserController {
         try {
             let token: any = req.headers.token;
             const decodedToken = JWT.VERIFY(token).id;
-            if (!(decodedToken == req.params.id)) {
-                return res.status(401).json({
-                    error: 'Siz faqat o\'zingizning ma\'lumotlaringizni o\'zgartira olasiz'
-                });
-            }
-            const user: IUser | null = await User.findByIdAndDelete(req.params.id);
+            const user: IUser | null = await User.findByIdAndDelete(decodedToken);
             if (user) {
                 res.json({ message: 'Foydalanuvchi o\'chirildi' });
             } else {
