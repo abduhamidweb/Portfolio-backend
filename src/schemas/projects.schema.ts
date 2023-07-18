@@ -1,4 +1,4 @@
-import { InferSchemaType, Types, Schema, model } from "mongoose";
+import mongoose, { InferSchemaType, Types, Schema, model, Mongoose } from "mongoose";
 import validator from "validator";
 let {isURL}= validator
 
@@ -34,11 +34,14 @@ const checkStatusSchema = new Schema(
       required: true,
     },
 
-    aboutInfo: {
-      type: String,
-      ref: "lists",
-      field: "id",
-    }
+    aboutInfo:[{ type: mongoose.Schema.Types.ObjectId, ref: 'List' }]
+    
+    // {
+    //   type: [String],
+    //   default: [],
+    //   ref: "lists",
+    //   field: "id",
+    // },
   },
   {
     timestamps: true,

@@ -1,7 +1,7 @@
 import { InferSchemaType, Types, Schema, model } from "mongoose";
 
-let listsSchema = new Schema({
-  list_text: {
+let listsSchema = new Schema({ 
+  listText: {  
     type: String,
     required: true,
   },
