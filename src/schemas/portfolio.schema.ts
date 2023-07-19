@@ -3,7 +3,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 const PortfolioSchema: Schema = new Schema({
     check: [{
         type: Schema.Types.ObjectId,
-        ref: 'Check',
+        ref: 'CheckStatus',
         unique: true,
         index: true,
     }],
