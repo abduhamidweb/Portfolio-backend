@@ -20,7 +20,8 @@ class PortfolioController {
     async getPortfolio(req: Request, res: Response) {
         try {
             const portfolio = await portfolioSchema.find().populate('user');
-            res.json(portfolio);
+            
+            res.send(portfolio);
         } catch (error) {
             console.log('error :', error);
             res.status(500).json({ error: 'Portfolio olishda xatolik yuz berdi' });

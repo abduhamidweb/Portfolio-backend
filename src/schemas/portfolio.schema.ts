@@ -1,9 +1,9 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 const PortfolioSchema: Schema = new Schema({
-    check: [{
+    check:[ {
         type: Schema.Types.ObjectId,
-        ref: 'CheckStatus',
+        ref: 'Sections',
         unique: true,
         index: true,
     }],
