@@ -43,14 +43,13 @@ class UserController {
             }
             const user = new User({ name, username, phone, email, password: sha256(password) });
             await user.save();
-
-            const addExpreience = new expreienceSchema({ exprience: "exprience", status: true });
+            const addExpreience = new expreienceSchema();
             await addExpreience.save();
-            await User.findByIdAndUpdate(user, {
+            await User.findByIdAndUpdate(user._id, {
                 $push: {
                     expreience: addExpreience._id
                 }
-            })
+            });
             res.status(201).json({
                 success: true,
                 token: JWT.SIGN({
@@ -80,21 +79,41 @@ class UserController {
             res.status(500).json({ error: 'Foydalanuvchilarni olishda xatolik yuz berdi' });
         }
     }
-    async getUserById(req: Request, res: Response) {
+    async getUserByToken(req: Request, res: Response) {
         try {
             let token: any = req.headers.token;
             if (!token) throw new Error("Invalid token");
             const userId = JWT.VERIFY(token).id;
             if (!userId) throw new Error("Invalid user id");
-            const user = await User.findById(userId).populate('expreience');
+            const user = await User.findById(userId).populate({
+                path: 'expreience',
+                populate: {
+                    path: 'data',
+                    model: 'ExpreienceData', // Replace with the actual model name for 'data'
+                },
+            });
             if (!user) throw new Error("User not found");
-
-
-
-
-
             if (user) {
                 res.json(user);
+            } else {
+                res.status(404).json({ error: 'Foydalanuvchi topilmadi' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error, message: 'Foydalanuvchini olishda xatolik yuz berdi' });
+        }
+    }
+    async getUserById(req: Request, res: Response) {
+        try {
+            const user = await User.findById(req.params.id).populate({
+                path: 'expreience',
+                populate: {
+                    path: 'data',
+                    model: 'ExpreienceData', // Replace with the actual model name for 'data'
+                },
+            });
+            if (!user) throw new Error("User not found");
+            if (user) {
+                res.status(200).send(user);
             } else {
                 res.status(404).json({ error: 'Foydalanuvchi topilmadi' });
             }

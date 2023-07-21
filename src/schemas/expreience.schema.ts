@@ -2,12 +2,9 @@ import { Request, Response } from "express";
 import mongoose, { Types, model } from "mongoose";
 
 const expreienceSchema = new mongoose.Schema({
-    exprience: {
-        type: String,
-        required: true
-    },
     status: {
         type: Boolean,
+        default:true,
         required: true
     },
     data: [{

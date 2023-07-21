@@ -17,7 +17,6 @@ class expreienceController {
             if (!userId) throw new Error("Invalid user id");
             const user:any = await userSchema.findById(userId).populate("expreience")
             if (!user) throw new Error("User not found");
-
             if (!company) throw new Error("you must add an company Name");
             const addExpreience = new Expreience({ companyName: company });
             await addExpreience.save();
