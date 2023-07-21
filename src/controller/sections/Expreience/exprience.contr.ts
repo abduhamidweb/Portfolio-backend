@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Expreience from "../schemas/expreience.schema.js";
-import { JWT } from "../utils/jwt.js";
-import userSchema from "../schemas/user.schema.js";
+import Expreience from "../../../schemas/sections/Expreience/expreience.schema.js";
+import { JWT } from "../../../utils/jwt.js";
+import userSchema from "../../../schemas/user.schema.js";
 class expreienceController {
     public async updateExpreience(req: Request, res: Response) {
         try {
@@ -19,7 +19,7 @@ class expreienceController {
             const addExpreience = await Expreience.findByIdAndUpdate(
                 user.expreience._id,
                 { status: newStatus },
-                { new: true } 
+                { new: true }
             );
 
             if (!addExpreience) throw new Error("Failed to update experience");

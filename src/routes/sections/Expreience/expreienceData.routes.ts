@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import authMiddleware from '../middleware/auth.js';
-import exprienceContr from '../controller/exprienceData.contr.js';
+import authMiddleware from '../../../middleware/auth.js';
+import exprienceContr from '../../../controller/sections/Expreience/exprienceData.contr.js';
 const router = Router();
 
 // router.post('/', userContr.createUser);

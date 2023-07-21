@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import Expreience from "../schemas/ExpreienceData.schema.js";
-import expreienceSchema from "../schemas/expreience.schema.js";
-import { JWT } from "../utils/jwt.js";
-import userSchema from "../schemas/user.schema.js";
+import Expreience from "../../../schemas/sections/Expreience/ExpreienceData.schema.js";
+import expreienceSchema from "../../../schemas/sections/Expreience/expreience.schema.js";
+import { JWT } from "../../../utils/jwt.js";
+import userSchema from "../../../schemas/user.schema.js";
 class expreienceController {
 
     public async getExpreienceData(req: Request, res: Response) {
@@ -13,9 +13,9 @@ class expreienceController {
         try {
             let token: any = req.headers.token;
             if (!token) throw new Error("Invalid token");
-            const userId = JWT.VERIFY(token).id; 
+            const userId = JWT.VERIFY(token).id;
             if (!userId) throw new Error("Invalid user id");
-            const user:any = await userSchema.findById(userId).populate("expreience")
+            const user: any = await userSchema.findById(userId).populate("expreience")
             if (!user) throw new Error("User not found");
             if (!company) throw new Error("you must add an company Name");
             const addExpreience = new Expreience({ companyName: company });

@@ -5,7 +5,7 @@ import { sendConfirmationEmail } from '../utils/nodemailer.js';
 import { JWT } from '../utils/jwt.js';
 import sha256 from "sha256"
 import redis from "redis";
-import expreienceSchema from '../schemas/expreience.schema.js';
+import expreienceSchema from '../schemas/sections/Expreience/expreience.schema.js';
 const client = redis.createClient({
     url: "redis://default:cWORnYkLiNeTFRVuauwwTN3exTNYLoDi@redis-12791.c291.ap-southeast-2-1.ec2.cloud.redislabs.com:12791"
 });
