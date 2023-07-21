@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, Types } from 'mongoose';
 import validator from 'validator';
 import { IUser } from '../interface/interface';
 const User: Schema = new Schema({
@@ -47,6 +47,10 @@ const User: Schema = new Schema({
         required: true,
         minlength: 4,
     },
+    expreience: {
+        type: Types.ObjectId,
+        ref: "Expreience",
+    }
 });
 
 export default mongoose.model<IUser>('User', User);
