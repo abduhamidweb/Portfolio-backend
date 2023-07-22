@@ -6,6 +6,7 @@ import { JWT } from '../utils/jwt.js';
 import sha256 from "sha256"
 import redis from "redis";
 import expreienceSchema from '../schemas/sections/Expreience/expreience.schema.js';
+import projectSchema from '../schemas/sections/Projects/project.schema.js';
 const client = redis.createClient({
     url: "redis://default:cWORnYkLiNeTFRVuauwwTN3exTNYLoDi@redis-12791.c291.ap-southeast-2-1.ec2.cloud.redislabs.com:12791"
 });
@@ -43,6 +44,8 @@ class UserController {
             }
             const user = new User({ name, username, phone, email, password: sha256(password) });
             await user.save();
+
+            // addExpreience ============
             const addExpreience = new expreienceSchema();
             await addExpreience.save();
             await User.findByIdAndUpdate(user._id, {
@@ -50,6 +53,16 @@ class UserController {
                     expreience: addExpreience._id
                 }
             });
+            // addProjects==============
+            const addProject = new projectSchema();
+            await addProject.save();
+            await User.findByIdAndUpdate(user._id, {
+                $push: {
+                    project: addProject._id
+                }
+            });
+
+
             res.status(201).json({
                 success: true,
                 token: JWT.SIGN({
@@ -71,6 +84,12 @@ class UserController {
                     path: 'data',
                     model: 'ExpreienceData', // Replace with the actual model name for 'data'
                 },
+            }).populate({
+                path: 'project', // 'project' ni ham populate qilamiz
+                populate: {
+                    path: 'data',
+                    model: 'projectData', // 'data' modelining nomini 'projectData' bilan almashtirib o'rnating
+                },
             });
 
             res.json(users);
@@ -91,6 +110,12 @@ class UserController {
                     path: 'data',
                     model: 'ExpreienceData', // Replace with the actual model name for 'data'
                 },
+            }).populate({
+                path: 'project', // 'project' ni ham populate qilamiz
+                populate: {
+                    path: 'data',
+                    model: 'projectData', // 'data' modelining nomini 'projectData' bilan almashtirib o'rnating
+                },
             });
             if (!user) throw new Error("User not found");
             if (user) {
@@ -109,6 +134,12 @@ class UserController {
                 populate: {
                     path: 'data',
                     model: 'ExpreienceData', // Replace with the actual model name for 'data'
+                },
+            }).populate({
+                path: 'project', // 'project' ni ham populate qilamiz
+                populate: {
+                    path: 'data',
+                    model: 'projectData', // 'data' modelining nomini 'projectData' bilan almashtirib o'rnating
                 },
             });
             if (!user) throw new Error("User not found");

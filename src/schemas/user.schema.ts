@@ -50,6 +50,10 @@ const User: Schema = new Schema({
     expreience: {
         type: Types.ObjectId,
         ref: "Expreience",
+    },
+    project: {
+        type: Types.ObjectId,
+        ref: "Project",
     }
 });
 
