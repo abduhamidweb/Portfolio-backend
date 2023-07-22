@@ -7,4 +7,4 @@ const projectDataSchema = new mongoose.Schema({
         required: true
     }
 });
-export default model("projectData", projectDataSchema);
+export default model("projectData", projectDataSchema); 
