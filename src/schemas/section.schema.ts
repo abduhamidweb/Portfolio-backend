@@ -6,6 +6,14 @@ const sectionsSchema = new Schema(
   {
    name : {
     type : String
+   },
+   portfolio : {
+    type : Types.ObjectId,
+    ref : "Portfolio"
+   },
+   status : {
+    type : Boolean,
+    default : true
    }
   },
   {

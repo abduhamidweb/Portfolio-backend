@@ -14,7 +14,7 @@ const experinceSchema = new Schema(
    },
    aboutInfo : [{
     type : Types.ObjectId,
-    ref : 'Lists'
+    ref : 'Lists',
    }],
    companyTitle : {
     type : String,

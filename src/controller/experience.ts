@@ -1,4 +1,4 @@
-import experienceSchema from "../schemas/experience.schema";
+import experienceSchema from "../schemas/experience.schema.js";
 import { Request, Response } from "express";
 
 
@@ -8,9 +8,10 @@ export class ExperienceContr{
     static async addExperience(req : Request, res : Response){
       try {
         const {companyImg, aboutInfo, companyTitle, jobTitle, workDate, companyUrl, telegramUrl, section_id} = req.body;
-        if(!companyImg ||!aboutInfo || !companyTitle || !jobTitle || !workDate ||!companyUrl || !telegramUrl ||!section_id){
+        if(!companyImg  || !companyTitle || !jobTitle || !workDate ||!companyUrl  ||!section_id){
             throw new Error(`Data is incompleted!`)
         }
+
         const newExp = await experienceSchema.create({companyImg, aboutInfo, companyTitle, jobTitle, workDate, companyUrl, telegramUrl, section_id});
         res.send({
             status : 200,
@@ -18,10 +19,10 @@ export class ExperienceContr{
             success : true,
             data : newExp
         })
-      } catch (error : unknown) {
+      } catch (error : any) {
         res.send({
              status : 400,
-             message : error,
+             message : error.message,
              success : false
         })
       }
@@ -46,10 +47,10 @@ export class ExperienceContr{
             success : true,
             data : updatedExperience
         })
-      } catch (error : unknown) {
+      } catch (error : any) {
         res.send({
             status : 400,
-            message : error,
+            message : error.message,
             success : false
        })
       }
@@ -70,10 +71,10 @@ export class ExperienceContr{
                 success : true,
                 data : deletedExp
             })
-        } catch (error : unknown) {
+        } catch (error : any) {
             res.send({
                 status : 400,
-                message : error,
+                message : error.message,
                 success : false
            })
         }

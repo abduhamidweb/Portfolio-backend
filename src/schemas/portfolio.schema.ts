@@ -1,12 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 const PortfolioSchema: Schema = new Schema({
-    check: [{
-        type: Schema.Types.ObjectId,
-        ref: 'CheckStatus',
-        unique: true,
-        index: true,
-    }],
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',

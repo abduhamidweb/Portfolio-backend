@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import portfolioSchema from '../schemas/portfolio.schema.js';
 import { JWT } from '../utils/jwt.js';
+import experienceSchema from '../schemas/experience.schema.js';
 class PortfolioController {
     async createUser(req: Request, res: Response) {
         try {
@@ -20,7 +21,8 @@ class PortfolioController {
     async getPortfolio(req: Request, res: Response) {
         try {
             const portfolio = await portfolioSchema.find().populate('user');
-            res.json(portfolio);
+             let data = await experienceSchema.find().populate({path : "section_id", populate : {path : "portfolio"}})
+             res.send(data)
         } catch (error) {
             console.log('error :', error);
             res.status(500).json({ error: 'Portfolio olishda xatolik yuz berdi' });
