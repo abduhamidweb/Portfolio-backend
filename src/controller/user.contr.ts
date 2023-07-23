@@ -5,6 +5,8 @@ import { sendConfirmationEmail } from '../utils/nodemailer.js';
 import { JWT } from '../utils/jwt.js';
 import sha256 from "sha256"
 import redis from "redis";
+import expreienceSchema from '../schemas/sections/Expreience/expreience.schema.js';
+import projectSchema from '../schemas/sections/Projects/project.schema.js';
 const client = redis.createClient({
     url: "redis://default:cWORnYkLiNeTFRVuauwwTN3exTNYLoDi@redis-12791.c291.ap-southeast-2-1.ec2.cloud.redislabs.com:12791"
 });
@@ -42,6 +44,25 @@ class UserController {
             }
             const user = new User({ name, username, phone, email, password: sha256(password) });
             await user.save();
+
+            // addExpreience ============
+            const addExpreience = new expreienceSchema();
+            await addExpreience.save();
+            await User.findByIdAndUpdate(user._id, {
+                $push: {
+                    expreience: addExpreience._id
+                }
+            });
+            // addProjects==============
+            const addProject = new projectSchema();
+            await addProject.save();
+            await User.findByIdAndUpdate(user._id, {
+                $push: {
+                    project: addProject._id
+                }
+            });
+
+
             res.status(201).json({
                 success: true,
                 token: JWT.SIGN({
@@ -57,34 +78,78 @@ class UserController {
     // Foydalanuvchilarni olish
     async getUsers(req: Request, res: Response) {
         try {
-            // let token: any = req.headers.token;
-            // const userId = JWT.VERIFY(token).id;
-            // const user: IUser | null = await User.findById(userId);
-            const users: IUser[] | null = await User.find();
+            const users: IUser[] | null = await User.find().populate({
+                path: 'expreience',
+                populate: {
+                    path: 'data',
+                    model: 'ExpreienceData', // Replace with the actual model name for 'data'
+                },
+            }).populate({
+                path: 'project', // 'project' ni ham populate qilamiz
+                populate: {
+                    path: 'data',
+                    model: 'projectData', // 'data' modelining nomini 'projectData' bilan almashtirib o'rnating
+                },
+            });
+
             res.json(users);
         } catch (error) {
             console.log('error :', error);
             res.status(500).json({ error: 'Foydalanuvchilarni olishda xatolik yuz berdi' });
         }
     }
-    async getUserById(req: Request, res: Response) {
+    async getUserByToken(req: Request, res: Response) {
         try {
             let token: any = req.headers.token;
+            if (!token) throw new Error("Invalid token");
             const userId = JWT.VERIFY(token).id;
-            // if (!(userId == req.params.id)) {
-            //     return res.status(401).json({
-            //         error: 'Yaroqsiz token not found'
-            //     });
-            // }
-
-            const user: IUser | null = await User.findById(req.params.id)
+            if (!userId) throw new Error("Invalid user id");
+            const user = await User.findById(userId).populate({
+                path: 'expreience',
+                populate: {
+                    path: 'data',
+                    model: 'ExpreienceData', // Replace with the actual model name for 'data'
+                },
+            }).populate({
+                path: 'project', // 'project' ni ham populate qilamiz
+                populate: {
+                    path: 'data',
+                    model: 'projectData', // 'data' modelining nomini 'projectData' bilan almashtirib o'rnating
+                },
+            });
+            if (!user) throw new Error("User not found");
             if (user) {
                 res.json(user);
             } else {
                 res.status(404).json({ error: 'Foydalanuvchi topilmadi' });
             }
         } catch (error) {
-            res.status(500).json({ error: 'Foydalanuvchini olishda xatolik yuz berdi' });
+            res.status(500).json({ error: error, message: 'Foydalanuvchini olishda xatolik yuz berdi' });
+        }
+    }
+    async getUserById(req: Request, res: Response) {
+        try {
+            const user = await User.findById(req.params.id).populate({
+                path: 'expreience',
+                populate: {
+                    path: 'data',
+                    model: 'ExpreienceData', // Replace with the actual model name for 'data'
+                },
+            }).populate({
+                path: 'project', // 'project' ni ham populate qilamiz
+                populate: {
+                    path: 'data',
+                    model: 'projectData', // 'data' modelining nomini 'projectData' bilan almashtirib o'rnating
+                },
+            });
+            if (!user) throw new Error("User not found");
+            if (user) {
+                res.status(200).send(user);
+            } else {
+                res.status(404).json({ error: 'Foydalanuvchi topilmadi' });
+            }
+        } catch (error) {
+            res.status(500).json({ error: error, message: 'Foydalanuvchini olishda xatolik yuz berdi' });
         }
     }
     // Foydalanuvchini yangilash
