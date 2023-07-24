@@ -7,8 +7,8 @@ const router = Router();
 
 
 router.post('/',auth,POST)
-router.get('/:id',auth,GET)
-router.put('/:id',auth,PUT)
-router.delete('/:id',auth,DELETE)
+// router.get("/:id", auth, idCheck, GET);
+router.put("/:id", auth, idCheck, PUT);
+router.delete("/:id", auth, idCheck, DELETE);
 
 export default router

@@ -18,6 +18,7 @@ async function postList(
   section: "project" | "experience",
   field: "aboutInfo" | "technology"
 ) {
+  // exp
   let dbName = section == "project" ? ProjectData : ProjectData;
 
   let addedData = await List.create({ listText });

@@ -4,7 +4,7 @@ import Middleware from '../../../middleware/project.check.js';
 const router = Router();
 let {authMiddleware,idChecker} =Middleware
 // router.post('/', userContr.createUser);
-router.get('/', projectsDataContr.getProjectData);
+// router.get('/', projectsDataContr.getProjectData);
 router.post("/", authMiddleware, projectsDataContr.postProjectData);
 router.put("/:id", authMiddleware,idChecker, projectsDataContr.PutProjectData);
 router.delete("/:id", authMiddleware,idChecker, projectsDataContr.deleteProjectData);

@@ -11,10 +11,9 @@ class ProjectController {
     try {
       let id: any = req.query.id;
 
-      let data: any = await ProjectData.findById(id).populate(
-        "aboutInfo",
-        "technology"
-      );
+      let data: any = await ProjectData.findById(id)
+        .populate("technology")
+        .populate("aboutInfo");
 
       if (!data) throw new Error("Invalid id");
 
